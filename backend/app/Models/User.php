@@ -67,4 +67,9 @@ final class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     {
         return $this->hasMany(Note::class);
     }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return str_ends_with($this->email, '@zennex.ru') && $this->hasVerifiedEmail();
+    }
 }
