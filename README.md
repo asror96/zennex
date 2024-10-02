@@ -33,7 +33,7 @@ make build
 
 ### 3. Вход в контейнер
 ```bash
-docker exec -it redcatbiz-backend-1 bash
+docker exec -it zennex-backend-1 bash
 ```
 ### 4. Миграция всех таблиц
 ```bash
