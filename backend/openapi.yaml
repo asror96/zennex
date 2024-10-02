@@ -1,0 +1,171 @@
+openapi: 3.0.3
+info:
+  title: Zennex
+  version: 1.0.0
+servers:
+  - url: http://localhost/api
+    description: Local
+paths:
+  /auth/login:
+    post:
+      operationId: login
+      summary: Получение токена
+      description: Получение токена
+      tags:
+        - login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/login'
+      responses:
+        '200':
+          description: Токен авторизации
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/login_response'
+        '401':
+          description: Неверный адрес электронной почты или пароль
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/login_response_401'
+        '400':
+          description: Письмо для подтверждение электронной почты отправлено заново.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/login_response_400'
+  /auth/logout:
+    post:
+      operationId: logout
+      summary: Выход из аккаунта
+      description: Выход из аккаунта
+      tags:
+        - logout
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Выход из аккаунта
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/logout_response'
+        '401':
+          description: Ошибка авторизации
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      error:
+                        type: string
+                        example: Токен просрочен
+                  - type: object
+                    properties:
+                      error:
+                        type: string
+                        example: Токен недействителен
+                  - type: object
+                    properties:
+                      error:
+                        type: string
+                        example: Токен не найден
+  /auth/me:
+    post:
+      operationId: Об аккаунте
+      summary: Об аккаунте
+      description: Информации об аккаунте
+      tags:
+        - me
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Информации об аккаунте
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/me'
+        '401':
+          description: Ошибка авторизации
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      error:
+                        type: string
+                        example: Токен просрочен
+                  - type: object
+                    properties:
+                      error:
+                        type: string
+                        example: Токен недействителен
+                  - type: object
+                    properties:
+                      error:
+                        type: string
+                        example: Токен не найден
+  /auth/refresh:
+    post:
+      operationId: Обновление токена
+      summary: Обновление токена
+      description: Обновление токена. Обновление происходит с помощью текущего токена. В токен вшит iat( время создание токена, то есть это время обезателбно должно быть до текущего момента времени), nbf( время последнего обновления), exp( время показывающее окончание работы токена). Для обновление токена iat и nbf должны быть в прошедшем времени, а exp еще в будущем.
+      tags:
+        - refresh
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Выход из аккаунта
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/login_response'
+components:
+  schemas:
+    login:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    login_response:
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+        expires_in:
+          type: integer
+    login_response_401:
+      type: object
+      properties:
+        message:
+          type: string
+    login_response_400:
+      type: object
+      properties:
+        error:
+          type: string
+    logout_response:
+      type: object
+      properties:
+        message:
+          type: string
+    me:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
