@@ -3,7 +3,7 @@
 ___
 ## Описание
 
-Backend часть **Zennex** написано на фреймворке [Laravel 11.](https://laravel.com/docs/11.x)
+Backend часть **Zennex** написано на фреймворке [Laravel 10.](https://laravel.com/docs/10.x)
 
 ## Используемые технологии
 
